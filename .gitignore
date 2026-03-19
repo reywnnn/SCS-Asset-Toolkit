@@ -4,5 +4,6 @@ __pycache__/
 *.zip
 *.blend1
 *.blend2
+*.code-workspace
 .vscode/
 .idea/
