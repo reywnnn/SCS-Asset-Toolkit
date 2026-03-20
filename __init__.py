@@ -4,11 +4,13 @@
 
 
 import bpy
- 
+
+from .operators.open_url import SAT_OT_OPEN_URL
 from .ui.main_panel import SAT_PT_MAIN
  
  
 classes = (
+    SAT_OT_OPEN_URL,
     SAT_PT_MAIN,
 )
  
