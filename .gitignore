@@ -5,5 +5,8 @@ __pycache__/
 *.blend1
 *.blend2
 *.code-workspace
+*.ps1
 .vscode/
 .idea/
+.build_number
+

@@ -3,10 +3,11 @@
 # or distribution is strictly prohibited.
 
 
-schema_version = "0.0.1"
+
+schema_version = "1.0.0"
 
 id = "scs_asset_toolkit"
-version = "0.0.1"
+version = "0.0.3"
 name = "SCS Asset Toolkit"
 tagline = "LOD, Shadow & Collision generation toolkit for assets"
 maintainer = """\
@@ -32,9 +33,12 @@ tags = ["Mesh", "Object"]
  
 [build]
 paths_exclude_pattern = [
+    "*.blend1",
     "__pycache__/",
     ".*",
     "*.zip",
+    "*.ps1",
+    ".build_number",
     "*.code-workspace",
     ".vscode/",
 ]

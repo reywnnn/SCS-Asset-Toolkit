@@ -3,9 +3,15 @@
 # or distribution is strictly prohibited.
 
 
+
 import bpy
 
+from ..operators.initialize import PRESET_NODE_GROUPS
 
+SCALE_Y = 1.2
+
+
+# Main sidebar panel in the 3D Viewport for the SCS Asset Toolkit
 class SAT_PT_MAIN(bpy.types.Panel):
     bl_label = "SCS Asset Toolkit"
     bl_idname = "SAT_PT_MAIN"
@@ -13,11 +19,13 @@ class SAT_PT_MAIN(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = "SCS Asset Toolkit"
 
+    # Draws the panel UI with links, input mesh selector, preset and initialize button
     def draw(self, context):
         layout = self.layout
 
         box = layout.box()
         row = box.row(align=True)
+        row.scale_y = SCALE_Y
         op = row.operator("sat.open_url", text="Docs", icon='HELP')
         op.url = (
             "https://scssoft.atlassian.net/wiki/spaces/"
@@ -31,4 +39,45 @@ class SAT_PT_MAIN(bpy.types.Panel):
             "?moveToWidget=3458764664537798733&cot=10"
         )
         op.tooltip = "Report an issue or provide feedback"
- 
+
+        box = layout.box()
+        row = box.row(align=True)
+        row.label(text="Input Mesh:")
+        row.prop(context.scene.sat, "input_mesh", text="")
+
+        row = box.row(align=True)
+        row.label(text="Preset:")
+        row.prop(context.scene.sat, "preset", text="")
+
+        sat = context.scene.sat
+        if sat.input_mesh is None:
+            box.label(text="Select an Input Mesh to continue.", icon='INFO')
+        if sat.preset == 'NONE':
+            box.label(text="Select a Preset to continue.", icon='INFO')
+
+        row = box.row(align=True)
+        row.scale_y = SCALE_Y
+        row.operator("sat.initialize", icon='MODIFIER')
+        row = box.row(align=True)
+        row.scale_y = SCALE_Y
+        row.operator("sat.clear", icon='TRASH')
+
+        # Show LOD slider and Bake button when generator modifier is applied
+        if sat.input_mesh and sat.preset != 'NONE':
+            node_group_name = PRESET_NODE_GROUPS.get(sat.preset)
+            if node_group_name:
+                for mod in sat.input_mesh.modifiers:
+                    if mod.type == 'NODES' and mod.node_group and mod.node_group.name == node_group_name:
+                        for item in mod.node_group.interface.items_tree:
+                            if item.item_type == 'SOCKET' and item.name == "Level of Detail:":
+                                box = layout.box()
+                                row = box.row(align=True)
+                                row.scale_y = SCALE_Y
+                                row.label(text="Level of Detail:")
+                                sub = row.row(align=True)
+                                sub.prop(sat, "lod_level", text="")
+                                row = box.row(align=True)
+                                row.scale_y = SCALE_Y
+                                row.operator("sat.bake", icon='OBJECT_DATA')
+                                break
+                        break
