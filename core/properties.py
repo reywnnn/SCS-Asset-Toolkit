@@ -9,9 +9,9 @@ import bpy
 from ..operators.initialize import PRESET_NODE_GROUPS
 
 
-# Filter function that only allows mesh objects to be selected
+# Filter function that only allows mesh objects linked to the scene
 def mesh_poll(self, object):
-    return object.type == 'MESH'
+    return object.type == 'MESH' and object.name in bpy.context.scene.objects
 
 
 # Syncs lod_level property value to the Geometry Nodes modifier socket
