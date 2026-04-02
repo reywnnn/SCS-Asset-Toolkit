@@ -35,7 +35,10 @@ def register():
  
 # Unregisters all classes and removes scene properties
 def unregister():
-    bpy.app.handlers.depsgraph_update_post.remove(on_depsgraph_update)
+    for handler in list(bpy.app.handlers.depsgraph_update_post):
+        if handler.__name__ == "on_depsgraph_update":
+            bpy.app.handlers.depsgraph_update_post.remove(handler)
+            break
     del bpy.types.Scene.sat
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
